@@ -55,7 +55,7 @@ class SIRS:
             return line_S, line_I, line_R
         
         animation = FuncAnimation(fig = fig, func = update, frames = len(self.times), interval = 25, repeat = False, blit = True)
-        plt.title('Simulation du modèle SIRS')
+        plt.title(f'Simulation du modèle SIRS : β = {self.beta}, γ = {self.gamma}, δ = {self.delta}')
         plt.xlabel('Temps (jours)')
         plt.ylabel('Proportion de la population')
         plt.legend(loc = 'best')

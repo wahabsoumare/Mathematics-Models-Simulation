@@ -31,7 +31,7 @@ class SIR:
         plt.plot(self.times, self.R, color = 'forestgreen', label = 'Rétablis')
         plt.xlabel('Temps (jours)')
         plt.ylabel('Proportion de la population')
-        plt.title('Simulation du modèle SIR')
+        plt.title(f'Simulation du modèle SIR : β = {self.beta}, γ = {self.gamma}')
         plt.legend()
         plt.grid()
 
@@ -54,7 +54,7 @@ class SIR:
             return line_S, line_I, line_R 
         
         animation = FuncAnimation(fig = fig, func = update, frames = len(self.times), interval = 25, repeat = False, blit = True)
-        plt.title('Simulation du modèle SIR')
+        plt.title(f'Simulation du modèle SIR : β = {self.beta}, γ = {self.gamma}')
         plt.xlabel('Temps (jours)')
         plt.ylabel('Proportion de la population')
         plt.legend(loc = 'center', bbox_to_anchor = (0.9, 0.5))
