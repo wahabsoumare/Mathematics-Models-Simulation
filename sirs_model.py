@@ -4,23 +4,24 @@ import matplotlib.pyplot as plt
 from matplotlib.animation import FuncAnimation
 
 class SIRS:
-    def __init__(self, beta, gamma, delta):
+    def __init__(self, beta, gamma, delta, N = 1000):
         self.beta = beta
         self.gamma = gamma
         self.delta = delta
+        self.N = N
 
-    def model(self, y, t, beta, gamma, delta):
+    def model(self, y, t):
         S, I, R = y
-        dS = -beta * S * I + delta * R
-        dI = beta * S * I - gamma * I
-        dR = gamma * I - delta * R
+        dS = -self.beta * S * I + self.delta * R
+        dI = self.beta * S * I - self.gamma * I
+        dR = self.gamma * I - self.delta * R
         return [dS, dI, dR]
 
-    def solve(self, N = 1000, I0 = 1, R0 = 0):
-        S0 = N - (I0 + R0)
+    def solve(self, I0 = 1, R0 = 0):
+        S0 = self.N - (I0 + R0)
         self.times = np.linspace(0, 160, 160)
-        y0 = [S0 / N, I0 / N, R0 / N]
-        self.solution = odeint(self.model, y0, self.times, args = (self.beta, self.gamma, self.delta))
+        y0 = [S0 / self.N, I0 / self.N, R0 / self.N]
+        self.solution = odeint(self.model, y0, self.times)
         self.S, self.I, self.R = self.solution.T
 
     def show_graph(self):
@@ -54,7 +55,6 @@ class SIRS:
             return line_S, line_I, line_R
         
         animation = FuncAnimation(fig = fig, func = update, frames = len(self.times), interval = 25, repeat = False, blit = True)
-
         plt.title('Simulation du modèle SIRS')
         plt.xlabel('Temps (jours)')
         plt.ylabel('Proportion de la population')

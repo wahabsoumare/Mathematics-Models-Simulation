@@ -4,30 +4,31 @@ from scipy.integrate import odeint
 from matplotlib.animation import FuncAnimation
 
 class SIR:
-    def __init__(self, beta, gamma):
+    def __init__(self, beta, gamma, N = 1000):
         self.beta = beta
         self.gamma = gamma
+        self.N = N
 
-    def model(self, y, t, beta, gamma):
+    def model(self, y, t):
         S, I, R = y
-        dS = -beta * S * I
-        dI = beta * S * I - gamma * I
-        dR = gamma * I
+        dS = -self.beta * S * I
+        dI = self.beta * S * I - self.gamma * I
+        dR = self.gamma * I
         return [dS, dI, dR]
 
-    def solve(self, N = 1000, I0 = 1, R0 = 0):
-        S0 = N - (I0 + R0)
+    def solve(self, I0 = 1, R0 = 0):
+        S0 = self.N - (I0 + R0)
         self.times = np.linspace(0, 160, 160)
-        y0 = [S0 / N, I0 / N, R0 / N]
-        self.solution = odeint(self.model, y0, self.times, args = (self.beta, self.gamma))
+        y0 = [S0 / self.N, I0 / self.N, R0 / self.N]
+        self.solution = odeint(self.model, y0, self.times)
         self.S, self.I, self.R = self.solution.T
 
     def show_graph(self):
         plt.figure(figsize = (10, 5))
 
-        plt.plot(self.times, self.S, label = 'Susceptibles')
-        plt.plot(self.times, self.I, label = 'Infectés')
-        plt.plot(self.times, self.R, label = 'Rétablis')
+        plt.plot(self.times, self.S, color = 'royalblue', label = 'Susceptibles')
+        plt.plot(self.times, self.I, color = 'crimson', label = 'Infectés')
+        plt.plot(self.times, self.R, color = 'forestgreen', label = 'Rétablis')
         plt.xlabel('Temps (jours)')
         plt.ylabel('Proportion de la population')
         plt.title('Simulation du modèle SIR')
@@ -53,7 +54,6 @@ class SIR:
             return line_S, line_I, line_R 
         
         animation = FuncAnimation(fig = fig, func = update, frames = len(self.times), interval = 25, repeat = False, blit = True)
-
         plt.title('Simulation du modèle SIR')
         plt.xlabel('Temps (jours)')
         plt.ylabel('Proportion de la population')
